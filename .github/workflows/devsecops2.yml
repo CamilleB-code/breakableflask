@@ -20,17 +20,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Créer et tester Dockerfile
         run: |
-          # Créer un Dockerfile minimal
           cat > Dockerfile <<EOF
 FROM python:3.10
-
 WORKDIR /app
-
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
 COPY . .
-
 CMD ["python", "app.py"]
 EOF
 
