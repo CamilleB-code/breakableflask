@@ -45,6 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: Dockerfile
     steps:
+      - uses: actions/checkout@v4
       - name: Deploy
         run: |
           echo "Rien à faire ici. Votre application est prête à être déployée"
