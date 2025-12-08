@@ -6,14 +6,39 @@ jobs:
     steps:
       - name: Dependances
         run: |
-          echo "ecrire ici le scrypt de contrôle des dépendances"
+
+          if [ ! -f "requirements.txt" ]; then
+            echo "le fichier requirements.txt n'existe pas"
+            exit 1
+          fi
+          echo "Le fichier requirements.txt a été trouvé"
+
+          if [ ! -s "requirements.txt" ]; then
+            echo "Le fihcier requirements.txt est vide"
+            exit 1
+          fi
+          echo "Le fichier requirements.txt n'est pas vide"
+
   Dockerfile:
     runs-on: ubuntu-latest
     needs: Dependances
     steps:
       - name: Test Dockerfile
         run: |
-          echo "ecrire ici le scrypt de contrôle du Dockerfile"
+          # Vérifier que Dockerfile existe
+          if [ ! -f "Dockerfile" ]; then
+            echo "Le Dockerfile n'existe pas"
+            exit 1
+          fi
+          echo "Dockerfile a été trouvé"
+
+          # Vérifier que le fichier commence par FROM
+          if ! grep -q "^FROM" Dockerfile; then
+            echo "Le Dockerfile invalide (pas d'instruction FROM)"
+            exit 1
+          fi
+          echo "Le Dockerfile est valide"
+
   Deploy:
     runs-on: ubuntu-latest
     needs: Dockerfile
@@ -21,5 +46,3 @@ jobs:
       - name: Deploy
         run: |
           echo "Rien à faire ici. Votre application est prête à être déployée"
-
-
