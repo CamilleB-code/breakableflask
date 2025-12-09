@@ -7,7 +7,7 @@ jobs:
       - name: Checkout du Code
         uses: actions/checkout@v4
       
-      - name: Contrôle des dépendances avec Trivy
+      - name: Contrôle des dépendances
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
@@ -16,14 +16,13 @@ jobs:
           format: 'table'
           template: '@default'
           
-      - name: Résultat du Contrôle
+      - name: Résultat
         if: success()
-        run: echo " Scan des dépendances réussi. Aucune vulnérabilité CRITICAL détectée."
+        run: echo " Scan réussi. Aucune vulnérabilité détectée."
 
-      - name: Résultat du Contrôle
-        # S'exécute toujours
+      - name: Résultat
         run: |
-          echo "✅ Scan des dépendances terminé. Le rapport complet est visible dans les logs de l'étape Trivy."
+          echo "Scan terminé, rapport disponible."
   
   Dockerfile:
     runs-on: ubuntu-latest
@@ -36,18 +35,17 @@ jobs:
       - name: Construire l'Image
         run: |
           echo "Construction de l'image Docker pour analyse..."
-          docker build -t mon-image-test:latest .
+          docker build -t img:latest .
           
       - name: Scanner l'Image avec Trivy
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
           
-          echo "Scanning image mon-image-test:latest pour vulnérabilités OS..."
-          trivy image --severity CRITICAL,HIGH,MEDIUM,LOW mon-image-test:latest
+          echo "Scann image img:latest pour les vulnérabilités..."
+          trivy image --severity CRITICAL,HIGH,MEDIUM,LOW img:latest
 
       - name: Résultat du Scan de l'Image
-        # S'exécute toujours
-        run: echo "✅ Scan de l'image terminé. Le rapport complet est visible dans les logs de l'étape Trivy."
+        run: echo "Scan de l'image terminé, rapport disponible."
 
 
   Deploy:
